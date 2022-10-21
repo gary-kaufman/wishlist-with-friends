@@ -1,39 +1,33 @@
 <template>
-  <main class="container mx-auto max-w-3xl flex flex-col">
-    <h1 class="text-xl">My Wishlist</h1>
-    <section id="AddItemForm">
-      <form class="container flex flex-col m-2">
-        <input type="text" placeholder="Item Title" />
-        <input type="text" placeholder="Item URL" />
-        <button class="bg-green-400 w-24 ml-auto">Add Item</button>
-      </form>
-    </section>
-    <section id="ItemList">
-      <ul>
-        <li class="flex flex-col">
-          <h2 class="text-lg">Item Title</h2>
-          <a>Item URL</a>
-          <button class="bg-blue-400 w-24 ml-auto">Mark as Purchased</button>
-        </li>
-        <li class="flex flex-col" s>
-          <h2 class="text-lg">Item 2 Title</h2>
-          <a>Item URL</a>
-          <button class="bg-blue-400 w-24 ml-auto">Mark as Purchased</button>
-        </li>
-      </ul>
-    </section>
+  <main>
+    <h2>My Wishlist <font-awesome-icon icon="fa-regular fa-square-check" /></h2>
+    <ItemForm @listRefresh="listRefresh" />
+    <ItemList ref="itemList" />
   </main>
 </template>
 
-<script lang="ts">
+<script>
+import ItemList from "./ItemList.vue";
+import ItemForm from "./ItemForm.vue";
+import { ref } from "vue";
+
+const itemList = ref();
+
 export default {
   name: "MyWishlist",
+  components: { ItemList, ItemForm },
+  methods: {
+    listRefresh() {
+      this.$refs.itemList.getItems();
+    },
+  },
 };
 </script>
 
 <style>
-li {
-  margin-top: 0.5em;
-  margin-bottom: 1em;
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 </style>
