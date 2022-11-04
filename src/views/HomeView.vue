@@ -1,5 +1,4 @@
 <template>
-  <AppHeader />
   <MyWishlist />
 </template>
 

@@ -2,60 +2,30 @@
   <section id="ItemList">
     <ul>
       <li v-for="item in favoriteItems" :key="item.url">
-        <div class="text_and_button">
-          <h3 id="item_name">{{ item.name }}</h3>
-          <button @click="favoriteItem(item)">
-            <font-awesome-icon
-              v-if="item.favorite === false"
-              icon="fa-regular fa-star"
-            />
-            <font-awesome-icon v-else icon="fa-solid fa-star" />
-          </button>
-        </div>
-
-        <div class="text_and_button">
-          <a id="item_url">{{ item.url }}</a>
-          <button @click="markAsPurchased(item)">
-            <span v-if="!item.purchased">Mark as Purchased</span>
-            <span v-else style="color: green">Purchased</span>
+          <a :href="item.url"  target="_blank" rel="noopener noreferrer"><h4 id="item_name">{{ item.name }}</h4></a>
+          <button @click="favoriteItem(item)" class="favoriteIcon">
+            <font-awesome-icon v-if="item.favorite === false" icon="fa-regular fa-star" size="xl"/>
+            <font-awesome-icon v-else icon="fa-solid fa-star" size="xl"/>
           </button>
           <button id="xmark" @click="deleteItem(item)">
-            <font-awesome-icon icon="fa-solid fa-xmark" />
+            <font-awesome-icon icon="fa-solid fa-xmark" size="xl" />
           </button>
-
-          <!-- <font-awesome-icon icon="fa-solid fa-star" /> -->
-        </div>
       </li>
       <li v-for="item in items" :key="item.url">
-        <div class="text_and_button">
-          <h3 id="item_name">{{ item.name }}</h3>
-          <button @click="favoriteItem(item)">
-            <font-awesome-icon
-              v-if="item.favorite === false"
-              icon="fa-regular fa-star"
-            />
-            <font-awesome-icon v-else icon="fa-solid fa-star" />
-          </button>
-        </div>
-
-        <div class="text_and_button">
-          <a id="item_url">{{ item.url }}</a>
-          <button @click="markAsPurchased(item)">
-            <span v-if="!item.purchased">Mark as Purchased</span>
-            <span v-else style="color: green">Purchased</span>
+          <a :href="item.url"  target="_blank" rel="noopener noreferrer"><h4 id="item_name">{{ item.name }}</h4></a>
+          <button @click="favoriteItem(item)" class="favoriteIcon">
+            <font-awesome-icon v-if="item.favorite === false" icon="fa-regular fa-star" size="xl"/>
+            <font-awesome-icon v-else icon="fa-solid fa-star" size="xl"/>
           </button>
           <button id="xmark" @click="deleteItem(item)">
-            <font-awesome-icon icon="fa-solid fa-xmark" />
+            <font-awesome-icon icon="fa-solid fa-xmark" size="xl"/>
           </button>
-
-          <!-- <font-awesome-icon icon="fa-solid fa-star" /> -->
-        </div>
       </li>
     </ul>
   </section>
 </template>
 <script>
-import { db } from "../includes/firebase";
+import { db, auth } from "../includes/firebase";
 import {
   doc,
   collection,
@@ -64,17 +34,18 @@ import {
   getDocs,
   deleteDoc,
   setDoc,
-  orderBy,
+  updateDoc,
 } from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
 
 export default {
   name: "ItemList",
   data() {
     return {
-      pendingRequest: false,
       favoriteItems: [],
       items: [],
       itemIDs: [],
+      uid: "",
     };
   },
   methods: {
@@ -84,7 +55,11 @@ export default {
       }
 
       this.pendingRequest = true;
-      const q = query(collection(db, "items"), where("favorite", "==", false));
+      const q = query(
+        collection(db, "items"),
+        where("favorite", "==", false),
+        where("uid", "==", this.uid)
+      );
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {
         if (!this.itemIDs.includes(doc.id)) {
@@ -95,7 +70,11 @@ export default {
           });
         }
       });
-      const fq = query(collection(db, "items"), where("favorite", "==", true));
+      const fq = query(
+        collection(db, "items"),
+        where("favorite", "==", true),
+        where("uid", "==", this.uid)
+      );
       const fQuerySnapshot = await getDocs(fq);
       fQuerySnapshot.forEach((doc) => {
         if (!this.itemIDs.includes(doc.id)) {
@@ -134,53 +113,43 @@ export default {
       await deleteDoc(doc(db, "items", item.docID));
       this.items.splice(this.items.indexOf(item), 1);
     },
+    async markAsPurchased(item) {
+      if (item.purchased === false) {
+        await updateDoc(doc(db, "items", item.docID), { purchased: true });
+        item.purchased = true;
+      } else {
+        await updateDoc(doc(db, "items", item.docID), { purchased: false });
+        item.purchased = false;
+      }
+    },
   },
   async created() {
+    await onAuthStateChanged(auth, (user) => {
+      this.uid = user.uid;
+    });
     this.getItems();
   },
 };
 </script>
-<style>
+<style scoped>
 section {
   margin-bottom: 1rem;
-}
-
-ul {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  max-width: 60%;
-  margin: auto;
-  list-style: none;
-  padding-left: 0;
-}
-
-li {
-  background-color: #2b2a33;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  border-style: solid;
-  border-color: #2b2a33;
-  border-radius: 2px;
 }
 
 h3 {
   text-align: center;
 }
 
-.text_and_button {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-}
-
-#item_url,
-#item_name {
-  flex-grow: 1;
-}
 
 #xmark {
   color: red;
+}
+
+a {
+  flex-grow: 1;
+}
+
+button:hover {
+  border-color: transparent;
 }
 </style>

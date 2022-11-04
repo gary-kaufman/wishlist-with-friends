@@ -1,24 +1,36 @@
 <template>
   <div>
-    <HomeView />
+    <AppHeader />
+    <router-view v-slot="{ Component }">
+    <transition name="fade" mode="out-in">
+      <component :is="Component"></component>
+    </transition>
+  </router-view>
   </div>
 </template>
 
 <script lang="ts">
-import HomeView from "./views/HomeView.vue";
-import { mapState } from "pinia";
-import { useAuthStore } from "./stores/authStore";
+import AppHeader from "./components/AppHeader.vue";
 
 export default {
   name: "App",
   components: {
-    HomeView,
-  },
-  computed: {
-    ...mapState(useAuthStore, ["isLoggedIn"]),
-  },
-  mounted() {
-    // console.log(this.isLoggedIn);
+    AppHeader,
   },
 };
 </script>
+
+<style scoped>
+.fade-enter-from {
+  opacity: 0;
+}
+
+.fade-enter-active {
+  transition: all 0.5s linear;
+}
+
+.fade-leave-to {
+  transition: all 0.5s linear;
+  opacity: 0;
+}
+</style>

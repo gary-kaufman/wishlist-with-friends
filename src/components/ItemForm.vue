@@ -1,6 +1,6 @@
 <template>
   <section id="AddItemForm">
-    <form id="new_item_form" ref="new_item_form">
+    <form id="new_item_form" ref="new_item_form" autocomplete="off">
       <input type="text" placeholder="Item Name" v-model="new_item_name" />
       <div id="url_and_button">
         <input
@@ -9,14 +9,15 @@
           id="item_url"
           v-model="new_item_url"
         />
-        <button id="add_item_button" @click.prevent="addItem">Add Item</button>
+        <button id="add_item_button" @click.prevent="addItem"><font-awesome-icon style="color: green;" icon="fa-solid fa-plus" size="2x"/></button>
       </div>
     </form>
   </section>
 </template>
 <script>
-import { db } from "../includes/firebase";
+import { db, auth } from "../includes/firebase";
 import { collection, addDoc } from "firebase/firestore";
+import { onAuthStateChanged } from "@firebase/auth";
 
 export default {
   name: "ItemForm",
@@ -24,6 +25,7 @@ export default {
     return {
       new_item_name: "",
       new_item_url: "",
+      uid: "",
     };
   },
   methods: {
@@ -35,18 +37,26 @@ export default {
           purchased: false,
           favorite: false,
           date: new Date(),
+          uid: this.uid,
         });
         this.$emit("listRefresh");
+        this.new_item_name = "",
+        this.new_item_url = "",
         this.$refs.new_item_form.reset();
       } catch (e) {
         console.error("Error adding document: ", e);
       }
     },
   },
+  async created() {
+    await onAuthStateChanged(auth, (user) => {
+      this.uid = user.uid;
+    });
+  },
 };
 </script>
 
-<style>
+<style scoped>
 section {
   margin-bottom: 1rem;
 }
@@ -54,13 +64,7 @@ section {
 #new_item_form {
   display: flex;
   flex-direction: column;
-  max-width: 60%;
   margin: auto;
-}
-
-input {
-  padding: 1rem;
-  font-size: larger;
 }
 
 #url_and_button {
@@ -76,6 +80,5 @@ input {
 #add_item_button {
   width: 20%;
   align-self: flex-end;
-  padding: 1rem;
 }
 </style>

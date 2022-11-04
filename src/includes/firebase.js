@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
 // TODO: Replace the following with your app's Firebase project configuration
 // See: https://firebase.google.com/docs/web/learn-more#config-object
@@ -16,29 +17,10 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
+// Initialize Firebase Authentication and get a reference to the service
+const auth = getAuth(app);
+
 // Initialize Cloud Firestore and get a reference to the service
 const db = getFirestore(app);
 
-export { db };
-
-/* 
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-
-// Create references
-const db = getFirestore(app);
-
-const itemsCollection = collection(db, "items");
-
-const data = {
-  name: "Los Angeles",
-  state: "CA",
-  country: "USA",
-};
-
-// Add a new document in collection "cities" with ID 'LA'
-const res = await db.collection("cities").set(data);
-
-export { db, itemsCollection };
- */
+export { auth, db };
