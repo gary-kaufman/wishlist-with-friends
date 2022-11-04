@@ -13,7 +13,7 @@
   </nav>
 </template>
 
-<script lang="ts">
+<script>
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "../includes/firebase";
 
@@ -37,7 +37,6 @@ export default {
     async logout() {
       try {
         await signOut(auth);
-        console.log("user signed out!");
         this.$router.push({ path: "/logout" });
       } catch (e) {
         console.log(e);

@@ -92,10 +92,15 @@ import {
       
     },
     async beforeCreate() {
+      console.log(this.$route.params.id);
       const usersRef = collection(db, "users")
       const docSnap = await getDocs(usersRef, where("uid", "==", this.$route.params.id));
-      docSnap.forEach(doc => this.display_name = doc.data().username);
-    }
+      docSnap.forEach(doc => {
+        if (doc.data().uid == this.$route.params.id) {
+          this.display_name = doc.data().username;
+        }
+    })
+   }
   }
 </script>
 
