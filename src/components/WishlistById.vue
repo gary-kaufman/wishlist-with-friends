@@ -113,6 +113,7 @@ li {
 }
 
 #favoriteIcon {
+  color: white;
   z-index: 99;
   position: relative;
   left: 10px;
@@ -134,6 +135,7 @@ h3 {
 
 a {
   flex-grow: 1;
+  color: white;
 }
 
 button {

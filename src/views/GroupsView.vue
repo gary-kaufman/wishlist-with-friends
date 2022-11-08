@@ -66,5 +66,6 @@ button {
 
 a {
   padding: 1rem;
+  color: white;
 }
 </style>

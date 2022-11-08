@@ -59,5 +59,6 @@ li {
 
 a {
   padding: 1rem;
+  color: white;
 }
 </style>

@@ -147,9 +147,8 @@ h3 {
 
 a {
   flex-grow: 1;
+  color: white;
+
 }
 
-button:hover {
-  border-color: transparent;
-}
 </style>

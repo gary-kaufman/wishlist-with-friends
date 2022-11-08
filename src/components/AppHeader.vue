@@ -57,7 +57,6 @@ nav {
   font-size: large;
   font-weight: bolder;
   flex-grow: 1;
-  color: #01ff91;
   }
 
 a {
