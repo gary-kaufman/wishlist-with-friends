@@ -71,4 +71,8 @@ main {
   align-self: flex-end;
   margin-bottom: 1rem;
 }
+
+#share_list:hover {
+  cursor: pointer;
+}
 </style>
