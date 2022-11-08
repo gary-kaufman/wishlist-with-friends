@@ -34,6 +34,7 @@ import {
   updateDoc,
   getDoc,
 } from "firebase/firestore";
+import NProgress from "nprogress";
   export default {
     name: "WishlistById",
     data() {
@@ -46,6 +47,7 @@ import {
     },
     methods: {
       async getItems(){
+      NProgress.start();
       const q = query(
         collection(db, "items"),
         where("favorite", "==", false),
@@ -76,6 +78,7 @@ import {
           });
         }
       });
+      NProgress.done();
       },
       async markAsPurchased(item) {
       if (item.purchased === false) {

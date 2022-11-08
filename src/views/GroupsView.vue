@@ -6,6 +6,7 @@
     </section>
     <section>
       <h2>My Groups</h2>
+      <p v-if="isEmpty">Join a group or create your own!</p>
       <ul>
         <li v-for="group in group_names" :key="group.docID">
           <router-link
@@ -21,16 +22,20 @@
 import { db, auth } from "../includes/firebase";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { onAuthStateChanged } from "@firebase/auth";
+import NProgress from "nprogress";
+
 export default {
   name: "GroupsView",
   data() {
     return {
       group_names: [],
       uid: "",
+      isEmpty: false,
     };
   },
   methods: {
     async getGroups() {
+      NProgress.start();
       const q = query(
         collection(db, "groups"),
         where("members", "array-contains", this.uid)
@@ -39,6 +44,12 @@ export default {
       querySnapshot.forEach((doc) => {
         this.group_names.push({ docID: doc.id, ...doc.data() });
       });
+      if (this.group_names.length == 0) {
+        this.isEmpty = true;
+      } else {
+        this.isEmpty = false;
+      }
+      NProgress.done();
     },
   },
   async created() {

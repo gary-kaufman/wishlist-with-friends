@@ -88,6 +88,7 @@ export default {
         });
       const docRef = await addDoc(collection(db, "users"), {
           username: this.username,
+          email: this.user_email,
           uid: this.user_id,
         });
       this.$router.push({ path: "/" });

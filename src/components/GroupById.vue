@@ -1,6 +1,7 @@
 <template>
   <div>
   <h1>{{ group_name }}</h1>
+  <p v-if="isEmpty">Invite some friends to join with the Group Name and Password!</p>
   <ul>
     <li v-for="member in members" :key="member.uid">
       <router-link
@@ -14,6 +15,8 @@
 import { db, auth } from "../includes/firebase";
 import { getDocs, doc, getDoc, where, collection, query } from "firebase/firestore";
 import { onAuthStateChanged } from "@firebase/auth";
+import NProgress from "nprogress";
+
 export default {
   name: "GroupById",
   data() {
@@ -21,6 +24,7 @@ export default {
       group_name: "",
       members: [],
       uid: "",
+      isEmpty: false,
     };
   },
   async created() {
@@ -33,6 +37,7 @@ export default {
   },
   methods: {
     async getMembers() {
+      NProgress.start();
       const docRef = doc(db, "groups", this.$route.params.id);
       const querySnapshot = await getDoc(docRef);
       this.group_name = querySnapshot.data().group_name;
@@ -47,7 +52,12 @@ export default {
           }
         })
       }
-
+      if (this.members == 0) {
+        this.isEmpty = true;
+      } else {
+        this.isEmpty = false;
+      }
+      NProgress.done();
     },
   },
 };

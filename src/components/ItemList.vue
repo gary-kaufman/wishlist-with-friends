@@ -1,5 +1,6 @@
 <template>
   <section id="ItemList">
+    <p v-if="isEmpty">Add some items to start your wishlist!</p>
     <ul>
       <li v-for="item in favoriteItems" :key="item.url">
           <a :href="item.url"  target="_blank" rel="noopener noreferrer"><h4 id="item_name">{{ item.name }}</h4></a>
@@ -37,6 +38,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
+import NProgress from "nprogress";
 
 export default {
   name: "ItemList",
@@ -46,15 +48,13 @@ export default {
       items: [],
       itemIDs: [],
       uid: "",
+      isEmpty: false,
     };
   },
   methods: {
     async getItems() {
-      if (this.pendingRequest) {
-        return;
-      }
+      NProgress.start();
 
-      this.pendingRequest = true;
       const q = query(
         collection(db, "items"),
         where("favorite", "==", false),
@@ -85,7 +85,13 @@ export default {
           });
         }
       });
-      this.pendingRequest = false;
+
+      if (this.favoriteItems.length == 0 & this.items.length == 0) {
+        this.isEmpty = true;
+      } else {
+        this.isEmpty = false;
+      }
+      NProgress.done();
     },
     async favoriteItem(item) {
       try {
