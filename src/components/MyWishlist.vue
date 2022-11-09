@@ -1,7 +1,7 @@
 <template>
   <main>
     <h2 v-if="display_name">{{ display_name }}'s Wishlist <font-awesome-icon icon="fa-regular fa-square-check" /></h2>
-    <span id="share_list" @click="share_link"><font-awesome-icon icon="fa-regular fa-share-from-square" />  Share List!</span>
+    <span id="share_list" @click="share_link"><font-awesome-icon icon="fa-solid fa-share-nodes" class="icon"/>Share List</span>
     <span v-if="message.showMessage" 
     style="color: green; 
     align-self: flex-end; 
@@ -77,6 +77,11 @@ main {
 }
 
 h2 {
+  color: rgb(34, 64, 108);
+}
+
+.icon {
+  margin-right: 0.5rem;
   color: rgb(34, 64, 108);
 }
 </style>

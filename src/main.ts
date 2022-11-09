@@ -4,9 +4,9 @@ import App from './App.vue'
 import { createPinia } from 'pinia'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faStar, faXmark, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faStar, faXmark, faPlus, faShareNodes, faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons'
 import { faStar as farStar, faSquareCheck, faSquare, faShareFromSquare } from '@fortawesome/free-regular-svg-icons'
-library.add(faStar, farStar, faSquareCheck, faXmark, faPlus, faSquare, faShareFromSquare)
+library.add(faStar, farStar, faSquareCheck, faXmark, faPlus, faSquare, faShareFromSquare, faShareNodes, faArrowUpRightFromSquare)
 import router from "./includes/router";
 import "nprogress/nprogress.css";
 
