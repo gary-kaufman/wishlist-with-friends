@@ -1,6 +1,6 @@
 <template>
   <main>
-  <h2 v-if="display_name">{{ display_name }}'s Wishlist</h2>
+  <h2 v-if="display_name">{{ display_name }}'s Wishlist <font-awesome-icon icon="fa-regular fa-square-check" /></h2>
 <section id="ItemList">
     <ul>
       <li v-for="item in favoriteItems" :key="item.url">
@@ -95,7 +95,6 @@ import NProgress from "nprogress";
       
     },
     async beforeCreate() {
-      console.log(this.$route.params.id);
       const usersRef = collection(db, "users")
       const docSnap = await getDocs(usersRef, where("uid", "==", this.$route.params.id));
       docSnap.forEach(doc => {
@@ -108,6 +107,10 @@ import NProgress from "nprogress";
 </script>
 
 <style scoped>
+h2 {
+  color: rgb(34, 64, 108);
+}
+
 li {
   display: flex;
   flex-direction: column;

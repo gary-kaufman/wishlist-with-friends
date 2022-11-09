@@ -56,7 +56,6 @@ export default {
           group_password: this.group_password,
           members: [this.uid],
         });
-        console.log("Group " + this.group_name + " created");
       } catch (e) {
         console.log("error: " + e);
       }

@@ -75,4 +75,8 @@ main {
 #share_list:hover {
   cursor: pointer;
 }
+
+h2 {
+  color: rgb(34, 64, 108);
+}
 </style>
