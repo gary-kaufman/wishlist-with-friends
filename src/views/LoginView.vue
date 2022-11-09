@@ -1,5 +1,8 @@
 <template>
   <main>
+    <p>Use this app to add items to your wishlist from all sites across the web! 
+      You can favorite items and even share your list!
+      Create or Join a Group with your friends and find the perfect gift!</p>
     <div id="selector">
       <button @click.prevent="loginOrRegister = 'login'">Login</button>
       <button @click.prevent="loginOrRegister = 'register'">Register</button>
@@ -21,9 +24,13 @@
         <button id="register" @click.prevent="register">Register</button>
       </form>
     </section>
+    <AppFooter />
+
   </main>
 </template>
 <script>
+import AppFooter from "../components/AppFooter.vue";
+
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -34,6 +41,9 @@ import { collection, addDoc } from "@firebase/firestore";
 
 export default {
   name: "LoginView",
+  components: {
+    AppFooter
+  },
   data() {
     return {
       username: "",
