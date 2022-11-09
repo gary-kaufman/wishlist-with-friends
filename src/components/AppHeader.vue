@@ -61,5 +61,10 @@ nav {
 
 a {
   padding: 1rem;
+  color: rgb(34, 64, 108);
+}
+
+h1 {
+  color: rgb(34, 64, 108);
 }
 </style>

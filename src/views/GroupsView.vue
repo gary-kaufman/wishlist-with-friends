@@ -61,6 +61,10 @@ export default {
 };
 </script>
 <style scoped>
+h2 {
+  color: rgb(34, 64, 108);
+}
+
 li {
   justify-content: center;
 }
