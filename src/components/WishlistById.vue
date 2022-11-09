@@ -5,14 +5,14 @@
     <ul>
       <li v-for="item in favoriteItems" :key="item.url">
           <font-awesome-icon id="favoriteIcon" icon="fa-solid fa-star" />
-          <a :href="item.url"  target="_blank" rel="noopener noreferrer"><h4 id="item_name">{{ item.name }}</h4></a>
+          <a :href="item.url"  target="_blank" rel="noopener noreferrer"><h4 id="item_name">{{ item.name }}  <font-awesome-icon icon="fa-solid fa-arrow-up-right-from-square" class="icon"/></h4></a>
           <button @click="markAsPurchased(item)">
             <span v-if="!item.purchased"><font-awesome-icon icon="fa-regular fa-square" /> Mark as Purchased</span>
             <span v-else style="color: green"><font-awesome-icon icon="fa-regular fa-square-check" /> Purchased</span>
           </button>
       </li>
       <li v-for="item in items" :key="item.url">
-          <a :href="item.url"  target="_blank" rel="noopener noreferrer"><h4 id="item_name">{{ item.name }}</h4></a>
+          <a :href="item.url"  target="_blank" rel="noopener noreferrer"><h4 id="item_name">{{ item.name }}  <font-awesome-icon icon="fa-solid fa-arrow-up-right-from-square" class="icon"/></h4></a>
           <button @click="markAsPurchased(item)">
             <span v-if="!item.purchased"><font-awesome-icon icon="fa-regular fa-square" /> Mark as Purchased</span>
             <span v-else style="color: green"><font-awesome-icon icon="fa-regular fa-square-check" /> Purchased</span>
@@ -107,6 +107,11 @@ import NProgress from "nprogress";
 </script>
 
 <style scoped>
+.icon {
+ margin-left: 0.25rem;
+ color: skyblue;
+}
+
 h2 {
   color: rgb(34, 64, 108);
 }
