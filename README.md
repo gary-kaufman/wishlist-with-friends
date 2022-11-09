@@ -1,4 +1,4 @@
-# wishlist-with-friends
+# wishlist-with-friends ✅
 ## Overview 
 This web app can be used to create your own wishlist of items from sites across the web. You can favorite items and share your wishlist. You can also create and join groups where you can see other friends wishlists and mark items as purchased. 
 
