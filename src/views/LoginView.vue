@@ -67,6 +67,8 @@ export default {
         return;
       }
       this.registering = true;
+
+      
       if (this.username == "") {
         this.errorMessage.isError = true;
         this.errorMessage.message = "Please enter a valid name.";
@@ -84,6 +86,8 @@ export default {
         this.registering = false;
         return;
       }
+
+      
       await createUserWithEmailAndPassword(auth, this.user_email, this.user_password)
         .then((userCredential) => {
           const user = userCredential.user;
@@ -114,8 +118,8 @@ export default {
           email: this.user_email,
           uid: this.user_id,
         });
-      this.$router.push({ path: "/" });
       this.registering = false;
+      this.$router.push({ path: "/" });
     },
     async login() {
       if (this.user_email == "") {
