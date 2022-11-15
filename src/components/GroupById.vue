@@ -1,7 +1,7 @@
 <template>
   <div>
   <h1>{{ group_name }}</h1>
-  <li><a>{{ display_name }} (Me)</a></li>
+  <li v-if="display_name != ''"><a>{{ display_name }} (Me)</a></li>
   <p v-if="isEmpty">Invite some friends to join with the Group Name and Password!</p>
   <ul>
     <li v-for="member in members" :key="member.uid">
