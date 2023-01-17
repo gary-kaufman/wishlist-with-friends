@@ -8,7 +8,7 @@
             <font-awesome-icon v-if="item.favorite === false" icon="fa-regular fa-star" size="xl"/>
             <font-awesome-icon v-else icon="fa-solid fa-star" size="xl"/>
           </button>
-          <button id="xmark" @click="deleteItem(item)">
+          <button id="xmark" @click="deleteFavoriteItem(item)">
             <font-awesome-icon icon="fa-solid fa-xmark" size="xl" />
           </button>
       </li>
@@ -118,6 +118,10 @@ export default {
     async deleteItem(item) {
       await deleteDoc(doc(db, "items", item.docID));
       this.items.splice(this.items.indexOf(item), 1);
+    },
+    async deleteFavoriteItem(item) {
+      await deleteDoc(doc(db, "items", item.docID));
+      this.favoriteItems.splice(this.favoriteItems.indexOf(item), 1);
     },
     async markAsPurchased(item) {
       if (item.purchased === false) {

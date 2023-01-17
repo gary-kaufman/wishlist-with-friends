@@ -1,6 +1,7 @@
 <template>
   <div>
   <h1>{{ group_name }}</h1>
+  <li v-if="display_name != ''"><a>{{ display_name }} (Me)</a></li>
   <p v-if="isEmpty">Invite some friends to join with the Group Name and Password!</p>
   <ul>
     <li v-for="member in members" :key="member.uid">
@@ -25,6 +26,7 @@ export default {
       members: [],
       uid: "",
       isEmpty: false,
+      display_name: "",
     };
   },
   async created() {
@@ -49,6 +51,8 @@ export default {
         snap.forEach(doc => {
           if (doc.data().uid !== this.uid) {
             this.members.push(doc.data());
+          } else {
+            this.display_name = doc.data().username;
           }
         })
       }

@@ -56,25 +56,38 @@ export default {
       errorMessage: {
         isError: false,
         message: "",
-      }
+      },
+      registering: false,
     };
   },
   methods: {
     async register() {
+      if (this.registering) {
+        console.log("registration already in progress!");
+        return;
+      }
+      this.registering = true;
+
+      
       if (this.username == "") {
         this.errorMessage.isError = true;
         this.errorMessage.message = "Please enter a valid name.";
+        this.registering = false;
         return;
       }
       if (this.user_email == "") {
         this.errorMessage.isError = true;
         this.errorMessage.message = "Please enter valid email.";
+        this.registering = false;
         return;
       } if (this.user_password == "") {
         this.errorMessage.isError = true;
         this.errorMessage.message = "Please enter valid password.";
+        this.registering = false;
         return;
       }
+
+      
       await createUserWithEmailAndPassword(auth, this.user_email, this.user_password)
         .then((userCredential) => {
           const user = userCredential.user;
@@ -88,9 +101,11 @@ export default {
             this.errorMessage.isError = true;
             this.errorMessage.message = error.code;
           }
+          this.registering = false;
           return;
         })
       if (this.user_id == "") {
+        this.registering = false;
         return;
       }
       await updateProfile(auth.currentUser, {displayName: this.username})
@@ -103,6 +118,7 @@ export default {
           email: this.user_email,
           uid: this.user_id,
         });
+      this.registering = false;
       this.$router.push({ path: "/" });
     },
     async login() {
