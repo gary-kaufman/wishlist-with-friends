@@ -3,15 +3,12 @@
     <form id="new_item_form" ref="new_item_form" autocomplete="off">
       <input type="text" placeholder="Item Name" v-model="new_item_name" />
       <div id="url_and_button">
-        <input
-          type="text"
-          placeholder="Item URL"
-          id="item_url"
-          v-model="new_item_url"
-        />
-        <button id="add_item_button" @click.prevent="addItem"><font-awesome-icon style="color: white;" icon="fa-solid fa-plus" size="2x"/></button>
+        <input type="text" placeholder="Item URL" id="item_url" v-model="new_item_url" />
+        <button id="add_item_button" @click.prevent="addItem"><font-awesome-icon style="color: white;"
+            icon="fa-solid fa-plus" size="2x" /></button>
       </div>
     </form>
+    <!-- TODO: Add dynamic look to item being added to list -->
     <span v-if="errorMessage.isError" :style="this.messageColor">{{ errorMessage.message }}</span>
     <span v-else :style="this.messageColor">{{ errorMessage.message }}</span>
 
@@ -37,7 +34,7 @@ export default {
   },
   computed: {
     messageColor() {
-      if(this.errorMessage.isError) {
+      if (this.errorMessage.isError) {
         return "color: red";
       } else {
         return "color: green";
@@ -68,8 +65,8 @@ export default {
         });
         this.$emit("listRefresh");
         this.new_item_name = "",
-        this.new_item_url = "",
-        this.$refs.new_item_form.reset();
+          this.new_item_url = "",
+          this.$refs.new_item_form.reset();
       } catch (e) {
         console.error("Error adding document: ", e);
       }
