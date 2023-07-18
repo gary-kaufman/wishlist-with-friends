@@ -1,26 +1,30 @@
 <template>
   <section id="ItemList">
     <p v-if="isEmpty">Add some items to start your wishlist!</p>
-    <ul>
-      <li v-for="item in favoriteItems" :key="item.url">
-          <a :href="item.url"  target="_blank" rel="noopener noreferrer"><h4 id="item_name">{{ item.name }}</h4></a>
-          <button @click="favoriteItem(item)" class="favoriteIcon">
-            <font-awesome-icon v-if="item.favorite === false" icon="fa-regular fa-star" size="xl"/>
-            <font-awesome-icon v-else icon="fa-solid fa-star" size="xl"/>
-          </button>
-          <button id="xmark" @click="deleteFavoriteItem(item)">
-            <font-awesome-icon icon="fa-solid fa-xmark" size="xl" />
-          </button>
+    <ul aria-live="assertive">
+      <li v-for="item in favoriteItems" :key="item.url" :id=item.url class="show">
+        <a :href="item.url" target="_blank" rel="noopener noreferrer">
+          <h4 id="item_name">{{ item.name }}</h4>
+        </a>
+        <button @click="favoriteItem(item)" class="favoriteIcon">
+          <font-awesome-icon v-if="item.favorite === false" icon="fa-regular fa-star" size="xl" />
+          <font-awesome-icon v-else icon="fa-solid fa-star" size="xl" />
+        </button>
+        <button class="xmark" @click="deleteItem(item)">
+          <font-awesome-icon icon="fa-solid fa-xmark" size="xl" />
+        </button>
       </li>
-      <li v-for="item in items" :key="item.url">
-          <a :href="item.url"  target="_blank" rel="noopener noreferrer"><h4 id="item_name">{{ item.name }}</h4></a>
-          <button @click="favoriteItem(item)" class="favoriteIcon">
-            <font-awesome-icon v-if="item.favorite === false" icon="fa-regular fa-star" size="xl"/>
-            <font-awesome-icon v-else icon="fa-solid fa-star" size="xl"/>
-          </button>
-          <button id="xmark" @click="deleteItem(item)">
-            <font-awesome-icon icon="fa-solid fa-xmark" size="xl"/>
-          </button>
+      <li v-for="item in items" :key="item.url" :id=item.url class="show">
+        <a :href="item.url" target="_blank" rel="noopener noreferrer">
+          <h4 id="item_name">{{ item.name }}</h4>
+        </a>
+        <button @click="favoriteItem(item)" class="favoriteIcon">
+          <font-awesome-icon v-if="item.favorite === false" icon="fa-regular fa-star" size="xl" />
+          <font-awesome-icon v-else icon="fa-solid fa-star" size="xl" />
+        </button>
+        <button class="xmark" @click="deleteItem(item)">
+          <font-awesome-icon icon="fa-solid fa-xmark" size="xl" />
+        </button>
       </li>
     </ul>
   </section>
@@ -48,7 +52,7 @@ export default {
       items: [],
       itemIDs: [],
       uid: "",
-      isEmpty: false,
+      isEmpty: false
     };
   },
   methods: {
@@ -101,13 +105,11 @@ export default {
           this.items.splice(this.items.indexOf(item), 1);
           this.favoriteItems.push(item);
           item.favorite = true;
-          //this.itemIDs.splice(this.itemIDs.indexOf(item.docID));
         } else {
           await setDoc(itemRef, { favorite: false }, { merge: true });
           this.favoriteItems.splice(this.favoriteItems.indexOf(item), 1);
           this.items.push(item);
           item.favorite = false;
-          //this.itemIDs.splice(this.itemIDs.indexOf(item.docID));
         }
       } catch (e) {
         console.log(e);
@@ -117,11 +119,11 @@ export default {
     },
     async deleteItem(item) {
       await deleteDoc(doc(db, "items", item.docID));
-      this.items.splice(this.items.indexOf(item), 1);
-    },
-    async deleteFavoriteItem(item) {
-      await deleteDoc(doc(db, "items", item.docID));
-      this.favoriteItems.splice(this.favoriteItems.indexOf(item), 1);
+      let itemElement = document.getElementById(item.url);
+      itemElement.classList.remove("show");
+      itemElement.ontransitionend = function () {
+        itemElement.remove();
+      }
     },
     async markAsPurchased(item) {
       if (item.purchased === false) {
@@ -142,6 +144,22 @@ export default {
 };
 </script>
 <style scoped>
+.show {
+  max-height: 100px;
+  visibility: visible;
+}
+
+li {
+  max-height: 0;
+  visibility: collapse;
+  transition: all 0.6s ease;
+  overflow: hidden;
+}
+
+.xmark {
+  color: red;
+}
+
 section {
   margin-bottom: 1rem;
 }
@@ -150,15 +168,8 @@ h3 {
   text-align: center;
 }
 
-
-#xmark {
-  color: red;
-}
-
 a {
   flex-grow: 1;
   color: white;
-
 }
-
 </style>
