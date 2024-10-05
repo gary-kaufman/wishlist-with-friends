@@ -3,18 +3,37 @@
   <h2 v-if="display_name">{{ display_name }}'s Wishlist <font-awesome-icon icon="fa-regular fa-square-check" /></h2>
 <section id="ItemList">
     <ul>
+      <!-- Favorite Item List -->
       <li v-for="item in favoriteItems" :key="item.url">
           <font-awesome-icon id="favoriteIcon" icon="fa-solid fa-star" />
-          <a :href="item.url"  target="_blank" rel="noopener noreferrer"><h4 id="item_name">{{ item.name }}  <font-awesome-icon icon="fa-solid fa-arrow-up-right-from-square" class="icon"/></h4></a>
+          <!-- Purchasable Item -->
+          <a :href="item.url" target="_blank" rel="noopener noreferrer">
+            <h4 id="item_name">{{ item.name }}  
+              <font-awesome-icon v-if="!item.idea" icon="fa-solid fa-arrow-up-right-from-square" class="icon"/>
+              <font-awesome-icon v-else icon="fa-solid fa-lightbulb" class="icon" size="lg"/>
+            </h4>
+          </a>
+          <!-- Mark As Purchased or Unlimited -->
           <button @click="markAsPurchased(item)">
-            <span v-if="!item.purchased"><font-awesome-icon icon="fa-regular fa-square" /> Mark as Purchased</span>
+            <span v-if="item.unlimited"><font-awesome-icon icon="fa-solid fa-infinity" /></span>
+            <span v-else-if="!item.purchased"><font-awesome-icon icon="fa-regular fa-square" /> Mark as Purchased</span>
             <span v-else style="color: green"><font-awesome-icon icon="fa-regular fa-square-check" /> Purchased</span>
           </button>
       </li>
+
+      <!-- Regular Item List -->
       <li v-for="item in items" :key="item.url">
-          <a :href="item.url"  target="_blank" rel="noopener noreferrer"><h4 id="item_name">{{ item.name }}  <font-awesome-icon icon="fa-solid fa-arrow-up-right-from-square" class="icon"/></h4></a>
+          <!-- Purchasable Item -->
+          <a :href="item.url" target="_blank" rel="noopener noreferrer">
+            <h4 id="item_name">{{ item.name }}  
+              <font-awesome-icon v-if="!item.idea" icon="fa-solid fa-arrow-up-right-from-square" class="icon"/>
+              <font-awesome-icon v-else icon="fa-solid fa-lightbulb" class="icon" size="lg"/>
+            </h4>
+          </a>
+          <!-- Mark As Purchased or Unlimited -->
           <button @click="markAsPurchased(item)">
-            <span v-if="!item.purchased"><font-awesome-icon icon="fa-regular fa-square" /> Mark as Purchased</span>
+            <span v-if="item.unlimited"><font-awesome-icon icon="fa-solid fa-infinity" /></span>
+            <span v-else-if="!item.purchased"><font-awesome-icon icon="fa-regular fa-square" /> Mark as Purchased</span>
             <span v-else style="color: green"><font-awesome-icon icon="fa-regular fa-square-check" /> Purchased</span>
           </button>
       </li>
@@ -107,6 +126,14 @@ import NProgress from "nprogress";
 </script>
 
 <style scoped>
+.lightbulbIcon {
+  color: skyblue;
+  z-index: 99;
+  position: relative;
+  left: 10px;
+  top: 10px;
+}
+
 .icon {
  margin-left: 0.25rem;
  color: skyblue;

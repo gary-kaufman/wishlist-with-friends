@@ -1,11 +1,15 @@
 <template>
   <section id="AddItemForm">
     <form id="new_item_form" ref="new_item_form" autocomplete="off">
-      <input type="text" placeholder="Item Name" v-model="new_item_name" />
+      <div id="url_and_button">
+        <input type="text" placeholder="Item Name" id="item_name" v-model="new_item_name" />
+        <button id="add_item_button" @click.prevent="addIdea"><font-awesome-icon style="color: white;"
+          icon="fa-solid fa-lightbulb" size="2x"  title="Add a Gift Idea"/></button>
+      </div>
       <div id="url_and_button">
         <input type="text" placeholder="Item URL" id="item_url" v-model="new_item_url" />
         <button id="add_item_button" @click.prevent="addItem"><font-awesome-icon style="color: white;"
-            icon="fa-solid fa-plus" size="2x" /></button>
+            icon="fa-solid fa-plus" size="2x"  title="Add a Gift with URL"/></button>
       </div>
     </form>
     <div id="message" :style="this.messageColor">{{ message.message_text }}</div>
@@ -73,6 +77,35 @@ export default {
       messageElement.classList.toggle("show");
       setTimeout(() => messageElement.classList.toggle("show"), 3000);
     },
+    async addIdea() {
+      if (this.new_item_name == "") {
+        this.message.isError = true;
+        this.message.message_text = "Please enter item name.";
+        console.log("no item name");
+      } else {
+        this.message.isError = false;
+        this.message.message_text = `${this.new_item_name} added as gift idea!`;
+        try {
+          const docRef = await addDoc(collection(db, "items"), {
+            name: this.new_item_name,
+            purchased: false,
+            idea: true,
+            favorite: false,
+            date: new Date(),
+            uid: this.uid,
+          });
+          this.$emit("listRefresh");
+          this.new_item_name = "",
+          this.new_item_url = ""
+          console.log("new gift idea added");
+        } catch (e) {
+          console.error("Error adding document: ", e);
+        }
+      }
+      let messageElement = document.getElementById("message");
+      messageElement.classList.toggle("show");
+      setTimeout(() => messageElement.classList.toggle("show"), 3000);
+    },
   },
   async created() {
     await onAuthStateChanged(auth, (user) => {
@@ -120,11 +153,11 @@ section {
   justify-content: flex-end;
 }
 
-#item_url {
+#item_url, #item_name {
   flex-grow: 1;
 }
 
-#add_item_button {
+#add_item_button, #add_idea_button {
   width: 20%;
   align-self: flex-end;
 }

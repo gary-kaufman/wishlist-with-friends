@@ -2,29 +2,42 @@
   <section id="ItemList">
     <p v-if="isEmpty">Add some items to start your wishlist!</p>
     <ul aria-live="assertive">
-      <li v-for="item in favoriteItems" :key="item.url" :id=item.url class="show">
-        <a :href="item.url" target="_blank" rel="noopener noreferrer">
-          <h4 id="item_name">{{ item.name }}</h4>
-        </a>
-        <button @click="favoriteItem(item)" class="favoriteIcon">
-          <font-awesome-icon v-if="item.favorite === false" icon="fa-regular fa-star" size="xl" />
-          <font-awesome-icon v-else icon="fa-solid fa-star" size="xl" />
-        </button>
-        <button class="xmark" @click="deleteItem(item)">
-          <font-awesome-icon icon="fa-solid fa-xmark" size="xl" />
-        </button>
+
+      <!-- Favorite Items List -->
+      <li v-for="item in favoriteItems" :key="item.url + item.name" :id="item.url + item.name" class="show">
+        <!-- Unlimited Icon -->
+        <button @click="unlimitedItem(item)"><font-awesome-icon :class="{limited: !item.unlimited, unlimited: item.unlimited}" icon="fa-solid fa-infinity"/></button>
+        
+        <!-- Item Name-->
+        <a :href="item.url" target="_blank" rel="noopener noreferrer"><h4 id="item_name">{{ item.name }}</h4></a>
+
+        <!-- Idea Icon -->
+        <button v-if="item.idea === true" disabled><font-awesome-icon style="color: white;" icon="fa-solid fa-lightbulb" size="2x"/></button>
+
+        <!-- Favorite Button -->
+        <button @click="favoriteItem(item)" class="favoriteIcon"><font-awesome-icon icon="fa-solid fa-star" size="lg" /></button>
+        
+        <!-- Delete Button -->
+        <button class="xmark" @click="deleteItem(item)"><font-awesome-icon icon="fa-solid fa-xmark" size="xl" /></button>
       </li>
-      <li v-for="item in items" :key="item.url" :id=item.url class="show">
-        <a :href="item.url" target="_blank" rel="noopener noreferrer">
-          <h4 id="item_name">{{ item.name }}</h4>
-        </a>
-        <button @click="favoriteItem(item)" class="favoriteIcon">
-          <font-awesome-icon v-if="item.favorite === false" icon="fa-regular fa-star" size="xl" />
-          <font-awesome-icon v-else icon="fa-solid fa-star" size="xl" />
-        </button>
-        <button class="xmark" @click="deleteItem(item)">
-          <font-awesome-icon icon="fa-solid fa-xmark" size="xl" />
-        </button>
+
+      <!-- Regular Items List -->
+      <li v-for="item in items" :key="item.url + item.name" :id="item.url + item.name" class="show">
+        <!-- Unlimited Icon -->
+        <button @click="unlimitedItem(item)"><font-awesome-icon :class="{limited: !item.unlimited, unlimited: item.unlimited}" icon="fa-solid fa-infinity"/></button>
+        
+        <!-- Item Name -->
+        <a :href="item.url" target="_blank" rel="noopener noreferrer"><h4 id="item_name">{{ item.name }}</h4></a>
+
+        <!-- Idea Icon -->
+        <button v-if="item.idea === true" disabled><font-awesome-icon style="color: white;" icon="fa-solid fa-lightbulb" size="2x"/></button>
+
+        <!-- Favorite Button -->
+        <button @click="favoriteItem(item)" class="favoriteIcon"><font-awesome-icon icon="fa-regular fa-star" size="lg" /></button>
+
+        <!-- Delete Button -->
+        <button class="xmark" @click="deleteItem(item)"><font-awesome-icon icon="fa-solid fa-xmark" size="xl" /></button>
+
       </li>
     </ul>
   </section>
@@ -117,9 +130,26 @@ export default {
 
       this.getItems();
     },
+    async unlimitedItem(item) {
+      console.log("UnlimtedItem function...");
+      try {
+        const itemRef = doc(db, "items", item.docID);
+        if (item.unlimited === false) {
+          await setDoc(itemRef, { unlimited: true }, { merge: true });
+          item.unlimited = true;
+        } else {
+          await setDoc(itemRef, { unlimited: false }, { merge: true });
+          item.unlimited = false;
+        }
+      } catch (e) {
+        console.log(e);
+      }
+
+      this.getItems();
+    },
     async deleteItem(item) {
       await deleteDoc(doc(db, "items", item.docID));
-      let itemElement = document.getElementById(item.url);
+      let itemElement = document.getElementById(item.url + item.name);
       itemElement.classList.remove("show");
       itemElement.ontransitionend = function () {
         itemElement.remove();
@@ -154,6 +184,14 @@ li {
   visibility: collapse;
   transition: all 0.6s ease;
   overflow: hidden;
+}
+
+.limited {
+  color: gray;
+}
+
+.unlimited {
+  color: green;
 }
 
 .xmark {
